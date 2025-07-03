@@ -46,14 +46,14 @@ Visit [http://localhost:8000/](http://localhost:8000/) in your browser.
 
 ```text
 bookshelf-django/
-├── bookstore/         # Main Django project
-├── hkeyet/            # Main books application
-├── media/             # Uploaded media files
-├── venv/              # Virtual environment (should be in .gitignore)
-├── book_detail.html   # HTML template (book detail page)
-├── booksApp_favorites.html # HTML template (favorites page)
-├── db.sqlite3         # SQLite database file
-├── manage.py          # Django management script
+├── bookstore/                 # Main Django project
+├── hkeyet/                    # Main books application
+├── media/                     # Uploaded media files
+├── venv/                      # Virtual environment (should be in .gitignore)
+├── book_detail.html           # HTML template (book detail page)
+├── booksApp_favorites.html    # HTML template (favorites page)
+├── db.sqlite3                 # SQLite database file
+├── manage.py                  # Django management script
 ```
 ---
 
