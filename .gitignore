@@ -1,0 +1,40 @@
+# Environnements virtuels Python
+venv/
+env/
+
+# Fichiers de base de données Django
+db.sqlite3
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Fichiers temporaires de l’éditeur
+*.swp
+*.swo
+*.bak
+
+# Dossiers de médias uploadés
+media/
+
+# Fichiers d’environnement
+.env
+.env.*
+
+# Fichiers de logs
+*.log
+
+# Fichiers statiques générés
+staticfiles/
+static_root/
+static/
+
+# Fichiers de configuration spécifiques à l’IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Fichiers système
+.DS_Store
+Thumbs.db
