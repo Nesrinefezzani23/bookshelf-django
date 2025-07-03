@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes Livres Favoris</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f7f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      color: #2d3a4b;
+      margin-top: 30px;
+    }
+    #books-list {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0;
+      list-style: none;
+    }
+    .book-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .book-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 18px;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .book-card.favorite {
+      border-left: 6px solid #e74c3c;
+      box-shadow: 0 4px 16px rgba(231,76,60,0.08);
+    }
+    .book-card:hover {
+      box-shadow: 0 8px 24px rgba(44,62,80,0.13);
+      transform: translateY(-2px) scale(1.012);
+      background: #f9f6f2;
+    }
+    .book-image {
+      flex-shrink: 0;
+      width: 110px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+      margin-right: 0;
+    }
+    .book-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .book-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2d3a4b;
+    }
+    .book-author {
+      color: #6c7a89;
+      font-size: 1em;
+      margin-bottom: 6px;
+    }
+    .book-description {
+      color: #444;
+      font-size: 0.98em;
+      margin-bottom: 8px;
+      max-height: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .book-meta {
+      font-size: 0.93em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .fav-btn {
+      align-self: flex-end;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 6px rgba(231,76,60,0.08);
+      outline: none;
+      margin-top: 10px;
+    }
+    .fav-btn.favorited {
+      background: #fff;
+      color: #e74c3c;
+      border: 2px solid #e74c3c;
+    }
+    .fav-btn:hover {
+      background: #c0392b;
+      color: #fff;
+    }
+    @media (max-width: 800px) {
+      #books-list { max-width: 98vw; }
+      .book-card { flex-direction: column; align-items: stretch; padding: 12px 4px; }
+      .book-image { width: 100%; height: 180px; margin-bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Mes Livres & Favoris</h1>
+  <ul id="books-list"></ul>
+
+  <script>
+    const username = prompt("Nom d'utilisateur ?");
+    const password = prompt("Mot de passe ?");
+
+    function fetchBooks() {
+      fetch('http://localhost:8000/api/books/', {
+        headers: {
+          'Authorization': 'Basic ' + btoa(username + ':' + password)
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const ul = document.getElementById('books-list');
+        ul.innerHTML = '';
+        data.results.forEach(book => {
+          const li = document.createElement('li');
+          // Lien cliquable sur toute la carte
+          const bookUrl = `book_detail.html?id=${book.id}`;
+          li.innerHTML = `
+            <a class="book-link" href="${bookUrl}" target="_blank" tabindex="0">
+              <div class="book-card${book.is_favorite ? ' favorite' : ''}">
+                ${book.image ? `<img class=\"book-image\" src=\"${book.image}\" alt=\"Couverture\">` : ''}
+                <div class="book-info">
+                  <div class="book-title">${book.title}</div>
+                  <div class="book-author">par ${book.author}</div>
+                  <div class="book-description">${book.description ? book.description.substring(0, 180) + (book.description.length > 180 ? '...' : '') : ''}</div>
+                  <div class="book-meta">
+                    <span>Publié le : ${book.publication_date}</span>
+                    ${book.average_rating ? `<span> | Note moyenne : ${book.average_rating} ⭐</span>` : ''}
+                  </div>
+                  <button class="fav-btn${book.is_favorite ? ' favorited' : ''}" data-id="${book.id}" onclick="event.preventDefault(); event.stopPropagation();">${book.is_favorite ? '★ Retirer des favoris' : '☆ Ajouter aux favoris'}</button>
+                </div>
+              </div>
+            </a>
+          `;
+          ul.appendChild(li);
+        });
+        addFavoriteListeners();
+      });
+    }
+
+    function addFavoriteListeners() {
+      document.querySelectorAll('.fav-btn').forEach(btn => {
+        btn.onclick = function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          const bookId = this.getAttribute('data-id');
+          fetch(`http://localhost:8000/api/books/${bookId}/favorite/`, {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Basic ' + btoa(username + ':' + password)
+            }
+          })
+          .then(() => fetchBooks());
+        };
+      });
+    }
+
+    fetchBooks();
+  </script>
+</body>
+</html> 
