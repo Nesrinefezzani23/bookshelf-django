@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Book, Comment, Category
+from django.contrib.auth.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,4 +55,20 @@ class BookSerializer(serializers.ModelSerializer):
         instance.save()
         if category_ids is not None:
             instance.categories.set(category_ids)
-        return instance 
+        return instance
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    email = serializers.EmailField(required=False)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'email')
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password'],
+            email=validated_data.get('email', '')
+        )
+        return user 

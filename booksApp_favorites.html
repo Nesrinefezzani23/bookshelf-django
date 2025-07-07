@@ -28,6 +28,7 @@
       top: 0;
       height: 100vh;
       z-index: 20;
+      justify-content: flex-start;
     }
     .sidebar h2 {
       color: #2d3a4b;
@@ -249,6 +250,24 @@
       background: #c0392b;
       color: #fff;
     }
+    .logout-btn {
+      margin-top: auto;
+      margin-bottom: 32px;
+      padding: 10px 24px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      align-self: center;
+      width: 80%;
+      transition: background 0.2s;
+    }
+    .logout-btn:hover {
+      background: #c0392b;
+    }
     @media (max-width: 900px) {
       .container { flex-direction: column; }
       .sidebar { width: 100%; flex-direction: row; border-right: none; border-bottom: 1px solid #ececec; box-shadow: none; padding: 12px 0; }
@@ -276,6 +295,7 @@
           <li><a href="#">Profil</a></li>
         </ul>
       </nav>
+      <button id="logout-btn" class="logout-btn">Déconnexion</button>
     </aside>
     <main class="main-content">
       <header class="header">
@@ -365,6 +385,11 @@
       askCredentials();
     }
 
+    // Redirection automatique si non connecté
+    if (!localStorage.getItem('booksapp_username') || !localStorage.getItem('booksapp_password')) {
+      window.location.href = 'login.html';
+    }
+
     // Récupérer tous les livres depuis l'API
     let allBooks = [];
     let nextPage = null;
@@ -442,6 +467,15 @@
           }
         };
       });
+    }
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.onclick = function() {
+        localStorage.removeItem('booksapp_username');
+        localStorage.removeItem('booksapp_password');
+        window.location.href = 'login.html';
+      };
     }
   </script>
 </body>

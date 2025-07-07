@@ -119,6 +119,10 @@
     // Récupère les identifiants du localStorage
     let username = localStorage.getItem('booksapp_username') || '';
     let password = localStorage.getItem('booksapp_password') || '';
+    // Redirection automatique si non connecté
+    if (!localStorage.getItem('booksapp_username') || !localStorage.getItem('booksapp_password')) {
+      window.location.href = 'login.html';
+    }
     // Récupère et affiche dynamiquement les catégories
     fetch('http://localhost:8000/api/categories/', {
       headers: {

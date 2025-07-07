@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from rest_framework import mixins
 from .models import Book, Comment, Category
-from .serializers import BookSerializer, CommentSerializer, CategorySerializer
+from .serializers import BookSerializer, CommentSerializer, CategorySerializer, UserRegistrationSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -47,3 +49,13 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.AllowAny]
+
+class UserRegistrationView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'detail': 'User created successfully.'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

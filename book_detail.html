@@ -138,6 +138,10 @@
 
     const bookId = getBookId();
     if (bookId) {
+      // Redirection automatique si non connecté
+      if (!localStorage.getItem('booksapp_username') || !localStorage.getItem('booksapp_password')) {
+        window.location.href = 'login.html';
+      }
       fetch(`http://localhost:8000/api/books/${bookId}/`)
         .then(response => response.json())
         .then(book => renderBook(book));

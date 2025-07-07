@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - 7keyet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7f7fa;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .signup-container {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            width: 350px;
+        }
+        .signup-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+        .signup-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .signup-container label {
+            margin-bottom: 0.3rem;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        .signup-container input {
+            padding: 0.7rem;
+            margin-bottom: 1.1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .signup-container button {
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .signup-container button:hover {
+            background: #3730a3;
+        }
+        .signup-container .message {
+            margin-bottom: 1rem;
+            color: #e53e3e;
+            text-align: center;
+        }
+        .signup-container .success {
+            color: #38a169;
+        }
+        .signup-container .switch-link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.97rem;
+        }
+        .signup-container .switch-link a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        .signup-container .switch-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Créer un compte</h2>
+        <div class="message" id="message"></div>
+        <form id="signup-form">
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+
+            <label for="email">Email (optionnel)</label>
+            <input type="email" id="email" name="email" autocomplete="email">
+
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" required autocomplete="new-password">
+
+            <button type="submit">S'inscrire</button>
+        </form>
+        <div class="switch-link">
+            Déjà un compte ? <a href="login.html">Se connecter</a>
+        </div>
+    </div>
+    <script>
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = '';
+        messageDiv.classList.remove('success');
+
+        const payload = { username, password };
+        if (email) payload.email = email;
+
+        try {
+            const response = await fetch('/api/register/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            if (response.ok) {
+                messageDiv.textContent = "Inscription réussie ! Redirection vers la connexion...";
+                messageDiv.classList.add('success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            } else {
+                if (data && typeof data === 'object') {
+                    messageDiv.textContent = Object.values(data).flat().join(' ');
+                } else {
+                    messageDiv.textContent = "Erreur lors de l'inscription.";
+                }
+            }
+        } catch (err) {
+            messageDiv.textContent = "Erreur réseau. Veuillez réessayer.";
+        }
+    });
+    </script>
+</body>
+</html> 

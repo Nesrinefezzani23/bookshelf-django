@@ -139,6 +139,10 @@
     const messageDiv = document.getElementById('message');
     let username = localStorage.getItem('booksapp_username') || '';
     let password = localStorage.getItem('booksapp_password') || '';
+    // Redirection automatique si non connecté
+    if (!localStorage.getItem('booksapp_username') || !localStorage.getItem('booksapp_password')) {
+      window.location.href = 'login.html';
+    }
     // Récupère les catégories et le livre, puis pré-remplit le formulaire
     let allCategories = [];
     let bookCategories = [];
