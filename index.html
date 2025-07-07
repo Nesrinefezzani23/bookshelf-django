@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Mes Livres Favoris</title>
+  <title>Accueil - 7keyet</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -74,6 +74,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      gap: 18px;
     }
     .header input[type="text"] {
       width: 100%;
@@ -90,7 +91,23 @@
       border: 1.5px solid #e74c3c;
       background: #fff;
     }
-    #favorites-list {
+    .add-book-btn {
+      background: #2d3a4b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 22px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 18px;
+      transition: background 0.2s;
+    }
+    .add-book-btn:hover {
+      background: #e74c3c;
+      color: #fff;
+    }
+    #books-list {
       padding: 36px 32px;
       flex: 1;
       overflow-y: auto;
@@ -198,17 +215,23 @@
       margin-top: 10px;
     }
     .update-btn, .delete-btn {
+      background: #bbb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
       padding: 5px 10px;
       font-size: 0.95em;
       font-weight: bold;
-      border: none;
-      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-left: 8px;
+      transition: background 0.2s;
+      box-shadow: 0 2px 6px rgba(231,76,60,0.08);
+      outline: none;
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
-      outline: none;
+      width: auto;
     }
     .update-btn {
       background: #27ae60;
@@ -218,7 +241,7 @@
       background: #219150;
     }
     .delete-btn {
-      background: #bbb;
+      background: #888;
       color: #fff;
     }
     .delete-btn:hover {
@@ -258,7 +281,7 @@
       .sidebar nav ul li a { padding: 10px 16px; border-radius: 6px; }
       .main-content { padding: 0; }
       .header { padding: 16px 8px; }
-      #favorites-list { padding: 18px 8px; }
+      #books-list { padding: 18px 8px; }
       .book-link, .book-card { flex-direction: column; align-items: stretch; }
       .book-image { width: 100%; height: 180px; margin-bottom: 10px; }
     }
@@ -270,8 +293,8 @@
       <h2>7keyet</h2>
       <nav>
         <ul>
-          <li><a href="index.html">Accueil</a></li>
-          <li><a href="booksApp_favorites.html" class="active">Favoris</a></li>
+          <li><a href="index.html" class="active">Accueil</a></li>
+          <li><a href="booksApp_favorites.html">Favoris</a></li>
           <li><a href="categories.html">Catégories</a></li>
           <li><a href="#">Profil</a></li>
         </ul>
@@ -280,20 +303,40 @@
     <main class="main-content">
       <header class="header">
         <input type="text" id="search" placeholder="Rechercher un livre...">
+        <button class="add-book-btn" onclick="window.location.href='add_book.html'">Ajouter un livre</button>
       </header>
-      <section id="favorites-list">
-        <!-- Les livres favoris seront affichés ici -->
+      <section id="books-list">
+        <!-- Les livres seront affichés ici -->
       </section>
       <div class="pagination" id="pagination"></div>
     </main>
   </div>
   <script>
-    // Fonction pour afficher les livres dans #favorites-list
+    // Authentification persistante via localStorage
+    let username = '';
+    let password = '';
+    function askCredentials() {
+      username = window.prompt("Nom d'utilisateur ?");
+      password = window.prompt("Mot de passe ?");
+      if (username && password) {
+        localStorage.setItem('booksapp_username', username);
+        localStorage.setItem('booksapp_password', password);
+      }
+    }
+    // Charger depuis localStorage ou demander
+    if (localStorage.getItem('booksapp_username') && localStorage.getItem('booksapp_password')) {
+      username = localStorage.getItem('booksapp_username');
+      password = localStorage.getItem('booksapp_password');
+    } else {
+      askCredentials();
+    }
+
+    // Fonction pour afficher les livres dans #books-list
     function renderBooks(books) {
-      const container = document.getElementById('favorites-list');
+      const container = document.getElementById('books-list');
       container.innerHTML = '';
       if (books.length === 0) {
-        container.innerHTML = '<p>Aucun livre favori pour le moment.</p>';
+        container.innerHTML = '<p>Aucun livre trouvé.</p>';
         return;
       }
       // Tri du plus récent au plus ancien
@@ -306,7 +349,7 @@
       });
       books.forEach(book => {
         const card = document.createElement('div');
-        card.className = 'book-card';
+        card.className = 'book-card' + (book.is_favorite ? ' favorite' : '');
         // Crée le lien
         const link = document.createElement('a');
         link.href = `book_detail.html?id=${book.id}`;
@@ -343,26 +386,25 @@
         card.appendChild(link);
         container.appendChild(card);
       });
+      addFavoriteListeners();
       addDeleteListeners();
     }
 
-    // Authentification persistante via localStorage
-    let username = '';
-    let password = '';
-    function askCredentials() {
-      username = window.prompt("Nom d'utilisateur ?");
-      password = window.prompt("Mot de passe ?");
-      if (username && password) {
-        localStorage.setItem('booksapp_username', username);
-        localStorage.setItem('booksapp_password', password);
-      }
-    }
-    // Charger depuis localStorage ou demander
-    if (localStorage.getItem('booksapp_username') && localStorage.getItem('booksapp_password')) {
-      username = localStorage.getItem('booksapp_username');
-      password = localStorage.getItem('booksapp_password');
-    } else {
-      askCredentials();
+    // Ajoute les listeners sur les boutons favoris
+    function addFavoriteListeners() {
+      document.querySelectorAll('.fav-btn').forEach(btn => {
+        btn.onclick = function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          const bookId = this.getAttribute('data-id');
+          fetch(`http://localhost:8000/api/books/${bookId}/favorite/`, {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Basic ' + btoa(username + ':' + password)
+            }
+          }).then(() => fetchBooks());
+        };
+      });
     }
 
     // Récupérer tous les livres depuis l'API
@@ -385,8 +427,7 @@
           const match = /[?&]page=(\d+)/.exec(url);
           currentPage = match ? parseInt(match[1]) : 1;
           totalPages = Math.ceil((data.count || allBooks.length) / 10);
-          const favorites = allBooks.filter(book => book.is_favorite);
-          renderBooks(favorites);
+          renderBooks(allBooks);
           renderPagination();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
@@ -413,9 +454,7 @@
     // Filtrage côté client
     document.getElementById('search').addEventListener('input', function(e) {
       const search = e.target.value.toLowerCase();
-      // Toujours filtrer sur les favoris
-      const favorites = allBooks.filter(book => book.is_favorite);
-      const filtered = favorites.filter(book =>
+      const filtered = allBooks.filter(book =>
         (book.title && book.title.toLowerCase().includes(search)) ||
         (book.author && book.author.toLowerCase().includes(search)) ||
         (book.description && book.description.toLowerCase().includes(search))

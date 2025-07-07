@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Catégories - 7keyet</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f7f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 210px;
+      background: #fff;
+      border-right: 1px solid #ececec;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.03);
+      padding: 32px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 20;
+    }
+    .sidebar h2 {
+      color: #2d3a4b;
+      font-size: 1.3em;
+      margin-bottom: 32px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+    .sidebar nav ul li {
+      margin: 18px 0;
+      width: 100%;
+    }
+    .sidebar nav ul li a {
+      color: #2d3a4b;
+      text-decoration: none;
+      padding: 10px 32px;
+      display: block;
+      border-radius: 6px 0 0 6px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+    .sidebar nav ul li a.active, .sidebar nav ul li a:hover {
+      background: #f7f7fa;
+      color: #e74c3c;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .header {
+      background: #fff;
+      padding: 24px 32px 16px 32px;
+      border-bottom: 1px solid #ececec;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      gap: 18px;
+    }
+    h1 {
+      color: #2d3a4b;
+      font-size: 2em;
+      margin: 0 0 24px 0;
+      font-weight: bold;
+    }
+    .categories-list {
+      padding: 36px 32px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+    .category-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 24px 28px 18px 28px;
+    }
+    .category-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #e74c3c;
+      margin-bottom: 18px;
+    }
+    .books-in-category {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .book-link {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+      text-decoration: none;
+      color: inherit;
+      gap: 32px;
+    }
+    .book-card {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 18px;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 12px;
+      padding: 18px 24px;
+      min-width: 340px;
+      max-width: 420px;
+    }
+    .book-image {
+      flex-shrink: 0;
+      width: 110px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+      margin-right: 0;
+    }
+    .book-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .book-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2d3a4b;
+    }
+    .book-author {
+      color: #6c7a89;
+      font-size: 1em;
+      margin-bottom: 6px;
+    }
+    .book-description {
+      color: #444;
+      font-size: 0.98em;
+      margin-bottom: 8px;
+      max-height: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .book-meta {
+      font-size: 0.93em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 900px) {
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; flex-direction: row; border-right: none; border-bottom: 1px solid #ececec; box-shadow: none; padding: 12px 0; height: auto; position: static; }
+      .sidebar h2 { display: none; }
+      .sidebar nav ul { display: flex; justify-content: space-around; }
+      .sidebar nav ul li { margin: 0; }
+      .sidebar nav ul li a { padding: 10px 16px; border-radius: 6px; }
+      .main-content { padding: 0; }
+      .header { padding: 16px 8px; }
+      .categories-list { padding: 18px 8px; }
+      .books-in-category { flex-direction: column; gap: 12px; }
+      .book-card { min-width: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>7keyet</h2>
+      <nav>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="booksApp_favorites.html">Favoris</a></li>
+          <li><a href="categories.html" class="active">Catégories</a></li>
+          <li><a href="#">Profil</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="header">
+        <h1>Catégories</h1>
+      </div>
+      <section class="categories-list" id="categories-list">
+        <!-- Les catégories et leurs livres seront affichés ici -->
+      </section>
+    </main>
+  </div>
+  <script>
+    // Récupère tous les livres depuis l'API
+    let username = localStorage.getItem('booksapp_username') || '';
+    let password = localStorage.getItem('booksapp_password') || '';
+    fetch('http://localhost:8000/api/books/?page_size=1000', {
+      headers: {
+        'Authorization': 'Basic ' + btoa(username + ':' + password)
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        const books = data.results || data;
+        // Regrouper les livres par catégorie
+        const categoriesMap = {};
+        books.forEach(book => {
+          (book.categories || []).forEach(cat => {
+            if (!categoriesMap[cat.name]) categoriesMap[cat.name] = [];
+            categoriesMap[cat.name].push(book);
+          });
+        });
+        // Générer l'affichage
+        const categoriesList = document.getElementById('categories-list');
+        if (Object.keys(categoriesMap).length === 0) {
+          categoriesList.innerHTML = '<p>Aucune catégorie trouvée.</p>';
+          return;
+        }
+        Object.keys(categoriesMap).sort().forEach(catName => {
+          const catDiv = document.createElement('div');
+          catDiv.className = 'category-card';
+          catDiv.innerHTML = `<div class="category-title">${catName}</div>`;
+          const booksDiv = document.createElement('div');
+          booksDiv.className = 'books-in-category';
+          categoriesMap[catName].forEach(book => {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+            const link = document.createElement('a');
+            link.href = `book_detail.html?id=${book.id}`;
+            link.className = 'book-link';
+            link.innerHTML = `
+              ${book.image ? `<img class=\"book-image\" src=\"${book.image}\" alt=\"Couverture\">` : ''}
+              <div class=\"book-info\">
+                <div class=\"book-title\">${book.title}</div>
+                <div class=\"book-author\">par ${book.author}</div>
+                <div class=\"book-description\">${book.description ? book.description.substring(0, 180) + (book.description.length > 180 ? '...' : '') : ''}</div>
+                <div class=\"book-meta\">
+                  <span>Publié le : ${book.publication_date || ''}</span>
+                  ${book.average_rating ? `<span> | Note moyenne : ${book.average_rating} ⭐</span>` : ''}
+                </div>
+              </div>
+            `;
+            card.appendChild(link);
+            booksDiv.appendChild(card);
+          });
+          catDiv.appendChild(booksDiv);
+          categoriesList.appendChild(catDiv);
+        });
+      });
+  </script>
+</body>
+</html>

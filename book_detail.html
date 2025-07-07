@@ -6,7 +6,68 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Roboto', Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0; }
-    .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 32px 28px; }
+    .container { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 210px;
+      background: #fff;
+      border-right: 1px solid #ececec;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.03);
+      padding: 32px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 20;
+    }
+    .sidebar h2 {
+      color: #2d3a4b;
+      font-size: 1.3em;
+      margin-bottom: 32px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+    .sidebar nav ul li {
+      margin: 18px 0;
+      width: 100%;
+    }
+    .sidebar nav ul li a {
+      color: #2d3a4b;
+      text-decoration: none;
+      padding: 10px 32px;
+      display: block;
+      border-radius: 6px 0 0 6px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+    .sidebar nav ul li a.active, .sidebar nav ul li a:hover {
+      background: #f7f7fa;
+      color: #e74c3c;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .book-detail-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 32px 28px;
+      width: 100%;
+    }
     .book-image { width: 180px; height: 240px; object-fit: cover; border-radius: 8px; background: #eee; float: left; margin-right: 24px; }
     .book-title { font-size: 1.5em; font-weight: bold; color: #2d3a4b; margin-bottom: 8px; }
     .book-author { color: #6c7a89; font-size: 1.1em; margin-bottom: 12px; }
@@ -15,13 +76,35 @@
     .back-link { display: inline-block; margin-top: 24px; color: #e74c3c; text-decoration: none; font-weight: bold; }
     .back-link:hover { text-decoration: underline; }
     @media (max-width: 700px) {
-      .container { padding: 12px 4px; }
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; flex-direction: row; border-right: none; border-bottom: 1px solid #ececec; box-shadow: none; padding: 12px 0; height: auto; position: static; }
+      .sidebar h2 { display: none; }
+      .sidebar nav ul { display: flex; justify-content: space-around; }
+      .sidebar nav ul li { margin: 0; }
+      .sidebar nav ul li a { padding: 10px 16px; border-radius: 6px; }
+      .main-content { padding: 0; }
+      .book-detail-container { padding: 12px 4px; }
       .book-image { float: none; display: block; margin: 0 auto 18px auto; }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="book-detail"></div>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>7keyet</h2>
+      <nav>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="booksApp_favorites.html">Favoris</a></li>
+          <li><a href="categories.html">Catégories</a></li>
+          <li><a href="#">Profil</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="book-detail-container" id="book-detail"></div>
+    </main>
+  </div>
   <script>
     // Récupère l'ID du livre depuis l'URL (ex: ?id=2)
     function getBookId() {
@@ -40,8 +123,17 @@
           ${book.average_rating ? `<span> | Note moyenne : ${book.average_rating} ⭐</span>` : ''}
         </div>
         <div class="book-description">${book.description || ''}</div>
-        <a class="back-link" href="booksApp_favorites.html">&larr; Retour à la liste</a>
+        <a class="back-link" href="#" onclick="handleBack(event)">&larr; Retour</a>
       `;
+    }
+
+    function handleBack(e) {
+      e.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'index.html';
+      }
     }
 
     const bookId = getBookId();
