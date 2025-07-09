@@ -38,7 +38,7 @@ Visit [http://localhost:8000/](http://localhost:8000/) in your browser.
 
 ## 🖼️ Screenshot
 
-![Screenshot 2025-07-03 3 33 43 PM](https://github.com/user-attachments/assets/512b1c14-3c85-45b4-8135-ecb7b90f1714)
+![Screenshot 2025-07-09 10 56 00 AM](https://github.com/user-attachments/assets/06804c9e-74c0-40a1-b4e4-39636ba86725)
 
 ---
 
